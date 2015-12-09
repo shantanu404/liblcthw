@@ -10,7 +10,7 @@ void List_destroy(List *list)
 {
 	LIST_FOREACH(list, first, next, cur) {
 		if(cur->prev) {
-			free(prev);
+			free(cur->prev);
 		}
 	}
 	
@@ -20,7 +20,7 @@ void List_destroy(List *list)
 
 void List_clear(List *list)
 {
-	LIST_FOREACH(lsit, first, next, cur) {
+	LIST_FOREACH(list, first, next, cur) {
 		if(cur->prev) {
 			free(cur->value);
 		}
@@ -54,7 +54,7 @@ error:
 	return;
 }
 
-void List_pop(List *list)
+void *List_pop(List *list)
 {
 	ListNode *node = list->last;
 	return node != NULL ? List_remove(list, node) : NULL;
@@ -82,7 +82,7 @@ error:
 	return;
 }
 
-void List_shift(List *list)
+void *List_shift(List *list)
 {
 	ListNode *node = list->first;
 	return node != NULL ? List_remove(list, node) : NULL;
@@ -97,13 +97,13 @@ void *List_remove(List *list, ListNode *node)
 	
 	if(node == list->first && node == list->last) {
 		list->first = NULL;
-		list->last -> NULL;
+		list->last = NULL;
 	} else if(node == list->first) {
 		list->first = node->next;
 		check(list->first != NULL, "Invalid list, somehow got a first that is NULL");
 		list->last->next = NULL;
 	} else if(node == list->last) {
-		list->last = next->prev;
+		list->last = node->prev;
 		check(list->last != NULL, "Invalid list, somehow got a last that is NULL");
 		list->last->next = NULL;
 	} else {
@@ -117,7 +117,7 @@ void *List_remove(List *list, ListNode *node)
 	result = node->value;
 	free(node);
 
-error;
+error:
 	return result;
 }
 
