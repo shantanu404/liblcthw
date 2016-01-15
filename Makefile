@@ -1,5 +1,5 @@
-CFLAGS=-g -O2 -Wall -Wextra -Isrc -rdynamic -DNDEBUG $(OPTFLAGS)
-LIBS=-ldl $(OPTLIBS)
+CFLAGS=-g -O2 -std=c11 -Wall -Wextra -Isrc -rdynamic -DNDEBUG $(OPTFLAGS)
+LDLIBS=-ldl -lbsd $(OPTLIBS)
 PREFIX?=/usr/local
 
 CC=gcc
@@ -34,7 +34,7 @@ build:
 	
 #The Unit Tests
 .PHONY: tests
-tests: LDLIBS += $(TARGET)
+tests: LDLIBS := $(TARGET) $(LDLIBS)
 tests: $(TESTS)
 	sh ./tests/runtests.sh
 valgrind:
