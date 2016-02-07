@@ -1,5 +1,5 @@
 CFLAGS=-g -O2 -std=c11 -Wall -Wextra -Isrc -rdynamic -DNDEBUG $(OPTFLAGS)
-LDLIBS=-ldl -lbsd $(OPTLIBS)
+LDLIBS=-lm -ldl -lbsd $(OPTLIBS)
 PREFIX?=/usr/local
 
 CC=gcc
