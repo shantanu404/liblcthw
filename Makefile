@@ -10,12 +10,15 @@ OBJECTS=$(patsubst %.c,%.o,$(SOURCES))
 TEST_SRC=$(wildcard tests/*_test.c)
 TESTS=$(patsubst %.c,%,$(TEST_SRC))
 
+PROGRAM_SRC=$(wildcard bin/*.c)
+PROGRAM=$(patsubst %.c, %, $(PROGRAM_SRC))
+
 NAME=lcthw
 TARGET=build/lib$(NAME).a
 SO_TARGET=$(patsubst %.a,%.so,$(TARGET))
 
 #The Target Build
-all: $(TARGET) $(SO_TARGET) tests
+all: $(TARGET) $(SO_TARGET) tests $(PROGRAMS)
 
 dev: CFLAGS=-g -Wall -Isrc -Wall -Wextra $(OPTFLAGS)
 dev: all
@@ -27,6 +30,8 @@ $(TARGET): build $(OBJECTS)
 
 $(SO_TARGET): $(TARGET) $(OBJECTS)
 	$(CC) -shared -o $@ $(OBJECTS)
+
+$(PROGRAMS): LDLIBS := $(TARGET) $(LDLIBS)
 
 build:
 	@mkdir -p build
@@ -42,7 +47,7 @@ valgrind:
 	
 #The Cleaner
 clean:
-	rm -rf build $(OBJECTS) $(TESTS)
+	rm -rf build $(OBJECTS) $(TESTS) $(PROGRAMS)
 	rm -f tests/tests.log
 	find . -name "*.gc*" -exec rm {} \;
 	rm -rf `find . -name "*.dSYM" -print`
