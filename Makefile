@@ -10,8 +10,8 @@ OBJECTS=$(patsubst %.c,%.o,$(SOURCES))
 TEST_SRC=$(wildcard tests/*_test.c)
 TESTS=$(patsubst %.c,%,$(TEST_SRC))
 
-PROGRAM_SRC=$(wildcard bin/*.c)
-PROGRAM=$(patsubst %.c, %, $(PROGRAM_SRC))
+PROGRAMS_SRC=$(wildcard bin/*.c)
+PROGRAMS=$(patsubst %.c, %, $(PROGRAMS_SRC))
 
 NAME=lcthw
 TARGET=build/lib$(NAME).a
@@ -31,7 +31,7 @@ $(TARGET): build $(OBJECTS)
 $(SO_TARGET): $(TARGET) $(OBJECTS)
 	$(CC) -shared -o $@ $(OBJECTS)
 
-$(PROGRAMS): LDLIBS := $(TARGET) $(LDLIBS)
+$(PROGRAMS): LDLIBS+=$(TARGET)
 
 build:
 	@mkdir -p build
