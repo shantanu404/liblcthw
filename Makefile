@@ -11,7 +11,7 @@ TEST_SRC=$(wildcard tests/*_test.c)
 TESTS=$(patsubst %.c,%,$(TEST_SRC))
 
 PROGRAMS_SRC=$(wildcard bin/*.c)
-PROGRAMS=$(patsubst %.c, %, $(PROGRAMS_SRC))
+PROGRAMS=$(patsubst bin/%.c, build/%, $(PROGRAMS_SRC))
 
 NAME=lcthw
 TARGET=build/lib$(NAME).a
@@ -32,6 +32,9 @@ $(SO_TARGET): $(TARGET) $(OBJECTS)
 	$(CC) -shared -o $@ $(OBJECTS)
 
 $(PROGRAMS): LDLIBS+=$(TARGET)
+$(PROGRAMS): CFLAGS+=-D_POSIX_C_SOURCE=200112L -D_BSD_SOURCE
+build/%: bin/%.c
+	$(CC) $(CFLAGS) -o $@ $< $(LDFLAGS) $(LDLIBS)
 
 build:
 	@mkdir -p build
